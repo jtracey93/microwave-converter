@@ -4,10 +4,9 @@
   "description": "A responsive static web app for converting microwave cooking times between different wattages",
   "main": "index.html",
   "scripts": {
-    "start": "npx swa start",
-    "build": "npx swa build",
-    "deploy": "npx swa deploy --env production",
-    "serve": "python -m http.server 8000"
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "dev": "python -m http.server 8000"
   },
   "keywords": [
     "microwave",
@@ -15,14 +14,12 @@
     "converter",
     "time",
     "wattage",
-    "static-web-app",
-    "pwa"
+    "github-pages",
+    "pwa",
+    "static-site"
   ],
-  "author": "Your Name",
+  "author": "jtracey93",
   "license": "MIT",
-  "devDependencies": {
-    "@azure/static-web-apps-cli": "^2.0.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/jtracey93/microwave-converter.git"
@@ -30,5 +27,5 @@
   "bugs": {
     "url": "https://github.com/jtracey93/microwave-converter/issues"
   },
-  "homepage": "https://github.com/jtracey93/microwave-converter#readme"
+  "homepage": "https://jtracey93.github.io/microwave-converter"
 }

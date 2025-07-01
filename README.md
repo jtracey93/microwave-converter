@@ -1,106 +1,100 @@
-# 🔥 Microwave Time Converter
+# 🔥 Microwave Cooking Time Converter
 
-A responsive static web app that helps users convert microwave cooking times between different wattages. Built with vanilla HTML, CSS, and JavaScript, optimized for mobile devices and ready for Azure Static Web Apps deployment.
+A responsive, mobile-friendly static web app that helps users convert microwave cooking times between different wattages. Built as a Progressive Web App (PWA) with offline functionality.
 
-## Features
+## 🚀 Live Demo
 
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Real-time Validation**: Input validation with helpful error messages
-- **PWA Ready**: Installable as a Progressive Web App with offline capabilities
-- **Intuitive Interface**: Clean, modern UI with smooth animations
-- **Quick Select**: Common wattage buttons for faster input
-- **Detailed Results**: Clear explanations of the conversion calculations
+Visit the app: **[https://jtracey93.github.io/microwave-converter](https://jtracey93.github.io/microwave-converter)**
 
-## How It Works
+## ✨ Features
 
-The app uses the energy equivalency formula to convert cooking times:
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **PWA Support**: Install as an app on your device for offline use
+- **Quick Selects**: Common wattages and cooking times for faster input
+- **Real-time Validation**: Immediate feedback on input values
+- **Clean UI**: Modern, minimalist design with intuitive navigation
+- **Keyboard Shortcuts**: Enter to calculate, Escape to reset
 
+## 🧮 How It Works
+
+The app uses the standard microwave conversion formula:
 ```
 New Time = (Original Time × Recipe Wattage) ÷ Your Wattage
 ```
 
-This ensures that the same amount of energy is delivered to your food, regardless of the microwave's wattage.
+Simply enter:
+1. The wattage specified in your recipe
+2. The cooking time from the recipe
+3. Your microwave's actual wattage
 
-## Usage
+Get the adjusted cooking time instantly!
 
-1. Enter the wattage specified in the cooking instructions
-2. Input the cooking time (minutes and seconds)
-3. Enter your microwave's wattage
-4. Click "Calculate Cooking Time" to get the adjusted time
+## 🛠️ Technology Stack
 
-## Technologies Used
+- **HTML5** - Semantic markup
+- **CSS3** - Modern styling with Grid and Flexbox
+- **Vanilla JavaScript** - No frameworks, pure ES6+
+- **PWA** - Service Worker for offline functionality
+- **GitHub Pages** - Static hosting
 
-- **HTML5**: Semantic markup with accessibility features
-- **CSS3**: Modern styling with CSS Grid, Flexbox, and animations
-- **JavaScript (ES6+)**: Vanilla JavaScript with modern features
-- **Progressive Web App**: Service worker for offline functionality
-- **Font Awesome**: Icons for enhanced UI
-- **Google Fonts**: Poppins font family
+## 🚀 Deployment
 
-## Deployment
-
-This app is designed to be deployed on Azure Static Web Apps:
-
-### Prerequisites
-
-```bash
-npm install -g @azure/static-web-apps-cli
-```
+This app is automatically deployed to GitHub Pages using GitHub Actions. Every push to the `main` branch triggers a new deployment.
 
 ### Local Development
 
-```bash
-# Start local development server
-npx swa start
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/jtracey93/microwave-converter.git
+   cd microwave-converter
+   ```
 
-# Build for production
-npx swa build
-```
+2. Start a local server:
+   ```bash
+   # Using Python 3
+   python -m http.server 8000
+   
+   # Or using npm
+   npm start
+   ```
 
-### Deploy to Azure
+3. Open http://localhost:8000 in your browser
 
-```bash
-# Deploy to production environment
-npx swa deploy --env production
-```
+### Manual Deployment to GitHub Pages
 
-## Project Structure
+1. Enable GitHub Pages in your repository settings
+2. Set source to "GitHub Actions"
+3. Push to main branch - deployment happens automatically
 
-```
-microwave-converter/
-├── index.html          # Main HTML file
-├── styles.css          # Responsive CSS styles
-├── script.js           # JavaScript functionality
-├── sw.js              # Service Worker for PWA
-├── manifest.json      # Web App Manifest
-├── swa-cli.config.json # Static Web Apps configuration
-└── README.md          # Project documentation
-```
+## 📱 PWA Installation
 
-## Browser Support
+Users can install this app on their devices:
 
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
-- Mobile browsers (iOS Safari, Chrome Mobile)
+- **Desktop**: Click the install button in the address bar
+- **Mobile**: Use "Add to Home Screen" option in browser menu
+- **Works Offline**: Once installed, works without internet connection
 
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch: `git checkout -b feature-name`
 3. Make your changes
-4. Test on multiple devices
-5. Submit a pull request
+4. Test locally
+5. Commit: `git commit -m 'Add some feature'`
+6. Push: `git push origin feature-name`
+7. Submit a pull request
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## 🍳 Perfect for:
 
-- Mathematical formula based on standard microwave energy conversion principles
-- Icons provided by Font Awesome
-- Fonts provided by Google Fonts
-- Built following Azure Static Web Apps best practices
-A static web app that converts cooking times between different microwave wattages
+- Home cooks adjusting recipes
+- College students with basic microwaves
+- Anyone with a different wattage microwave than recipe calls for
+- Quick conversions without complicated calculations
+
+---
+
+**Built with ❤️ for better cooking experiences**

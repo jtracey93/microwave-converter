@@ -1,10 +1,11 @@
 // Service Worker for Microwave Timer PWA
 const CACHE_NAME = 'microwave-timer-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/script.js'
+    './',
+    './index.html',
+    './styles.css',
+    './script.js',
+    './manifest.json'
 ];
 
 // Install event - cache resources
