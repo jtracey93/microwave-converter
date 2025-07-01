@@ -1,6 +1,6 @@
 {
     "name": "Microwave Timer",
-    "short_name": "μTimer",
+    "short_name": "Microwave Timer",
     "description": "Convert cooking times between different microwave wattages",
     "start_url": "/",
     "display": "standalone",
