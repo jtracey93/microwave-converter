@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "microwave-converter": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "/path/to/microwave-converter"
+    }
+  }
+}

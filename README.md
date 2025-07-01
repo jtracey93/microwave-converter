@@ -36,6 +36,7 @@ Get the adjusted cooking time instantly!
 - **Vanilla JavaScript** - No frameworks, pure ES6+
 - **PWA** - Service Worker for offline functionality
 - **GitHub Pages** - Static hosting
+- **Python MCP Server** - Model Context Protocol server for IDE integration
 
 ## 🚀 Deployment
 
@@ -59,6 +60,95 @@ This app is automatically deployed to GitHub Pages using GitHub Actions. Every p
    ```
 
 3. Open http://localhost:8000 in your browser
+
+## 🤖 MCP Server Usage
+
+This repository includes a Python MCP (Model Context Protocol) server that provides the same microwave time conversion capabilities via an MCP tool. This allows you to use the conversion functionality directly from IDEs like VS Code with MCP support.
+
+### Setup MCP Server
+
+1. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run the MCP server:
+   ```bash
+   python mcp_server.py
+   ```
+
+### MCP Tool Usage
+
+The MCP server provides a single tool called `convert_microwave_time` with the following parameters:
+
+- `original_wattage` (number): Recipe's microwave wattage (100-2000W)
+- `target_wattage` (number): Your microwave's wattage (100-2000W)  
+- `original_minutes` (number): Original cooking time in minutes (0-60)
+- `original_seconds` (number): Original cooking time in seconds (0-59)
+
+**Example tool call:**
+```json
+{
+  "original_wattage": 1000,
+  "target_wattage": 700,
+  "original_minutes": 2,
+  "original_seconds": 0
+}
+```
+
+**Example response:**
+```json
+{
+  "converted_time": {
+    "minutes": 2,
+    "seconds": 51,
+    "total_seconds": 171,
+    "formatted": "2m 51s"
+  },
+  "original_time": {
+    "minutes": 2,
+    "seconds": 0,
+    "total_seconds": 120,
+    "formatted": "2m 0s"
+  },
+  "wattages": {
+    "original": 1000,
+    "target": 700,
+    "ratio": 1.43
+  },
+  "power_recommendation": {
+    "power_level": "100%",
+    "reason": "Your microwave power is similar to the recipe. Use normal power."
+  },
+  "explanation": "Cook for 2m 51s instead of 2m 0s when using a 700W microwave instead of 1000W"
+}
+```
+
+### Testing the MCP Server
+
+You can test the conversion logic without MCP dependencies:
+
+```bash
+python test_standalone.py
+```
+
+### Claude Desktop Integration
+
+To use with Claude Desktop, add this configuration to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "microwave-converter": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "/path/to/microwave-converter"
+    }
+  }
+}
+```
+
+Replace `/path/to/microwave-converter` with the actual path to this repository on your system.
 
 ### Manual Deployment to GitHub Pages
 
