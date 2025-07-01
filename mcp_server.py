@@ -10,7 +10,7 @@ import asyncio
 import json
 from typing import Any, Dict
 
-from mcp.server import Server
+from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
 from mcp.server.stdio import stdio_server
 from mcp.types import (
@@ -180,7 +180,7 @@ async def main():
                 server_name="microwave-converter",
                 server_version="1.0.0",
                 capabilities=server.get_capabilities(
-                    notification_options=None,
+                    notification_options=NotificationOptions(),
                     experimental_capabilities=None,
                 ),
             ),
