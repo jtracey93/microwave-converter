@@ -79,12 +79,9 @@ This repository includes a Python MCP (Model Context Protocol) server that provi
 
 ### MCP Tool Usage
 
-The MCP server provides two tools for microwave time conversion:
+The MCP server provides the `convert_microwave_time` tool for microwave time conversion:
 
-#### 1. `convert_microwave_time` - Structured Parameters
-
-For precise control with explicit parameters:
-
+**Tool Parameters:**
 - `original_wattage` (number): Recipe's microwave wattage (100-2000W)
 - `target_wattage` (number): Your microwave's wattage (100-2000W)  
 - `original_minutes` (number): Original cooking time in minutes (0-60)
@@ -100,25 +97,7 @@ For precise control with explicit parameters:
 }
 ```
 
-#### 2. `convert_microwave_time_natural` - Natural Language
-
-For conversational queries using natural language:
-
-- `query` (string): Natural language question about microwave time conversion
-
-**Example queries:**
-- "how long do I need to microwave my meal in my 700w microwave when the instructions expect a 950w microwave and a cooking time of 5 minutes"
-- "I have a 800w microwave and the recipe calls for 1000w for 2 minutes 30 seconds"
-- "Using my 600w microwave with a recipe that expects 1100w for 90 seconds"
-
-**Example tool call:**
-```json
-{
-  "query": "how long do I microwave food in my 700w when recipe says 1000w for 3 minutes"
-}
-```
-
-**Example response (both tools return the same format):**
+**Example response:**
 ```json
 {
   "converted_time": {
@@ -142,14 +121,7 @@ For conversational queries using natural language:
     "power_level": "100%",
     "reason": "Your microwave power is similar to the recipe. Use normal power."
   },
-  "explanation": "Cook for 2m 51s instead of 2m 0s when using a 700W microwave instead of 1000W",
-  "original_query": "how long do I microwave food in my 700w when recipe says 1000w for 3 minutes", // Only for natural language tool
-  "parsed_parameters": {  // Only for natural language tool
-    "original_wattage": 1000,
-    "target_wattage": 700,
-    "original_minutes": 3,
-    "original_seconds": 0
-  }
+  "explanation": "Cook for 2m 51s instead of 2m 0s when using a 700W microwave instead of 1000W"
 }
 ```
 
@@ -161,23 +133,33 @@ You can test the conversion logic without MCP dependencies:
 python test_standalone.py
 ```
 
-### Claude Desktop Integration
+### VS Code Integration
 
-To use with Claude Desktop, add this configuration to your `claude_desktop_config.json`:
+To use this MCP server with VS Code, you'll need an MCP-compatible extension. Here are the steps:
 
-```json
-{
-  "mcpServers": {
-    "microwave-converter": {
-      "command": "python",
-      "args": ["mcp_server.py"],
-      "cwd": "/path/to/microwave-converter"
-    }
-  }
-}
-```
+1. **Install an MCP Extension**: Install an extension that supports the Model Context Protocol, such as:
+   - [MCP Manager](https://marketplace.visualstudio.com/items?itemName=modelcontextprotocol.mcp-manager) (if available)
+   - Or other MCP-compatible extensions from the VS Code marketplace
 
-Replace `/path/to/microwave-converter` with the actual path to this repository on your system.
+2. **Configure the MCP Server**: Add the microwave converter server to your MCP configuration. This is typically done through the extension's settings or a configuration file:
+
+   ```json
+   {
+     "servers": {
+       "microwave-converter": {
+         "command": "python",
+         "args": ["mcp_server.py"],
+         "cwd": "/path/to/microwave-converter"
+       }
+     }
+   }
+   ```
+
+3. **Update the Path**: Replace `/path/to/microwave-converter` with the actual path to this repository on your system.
+
+4. **Start Using**: Once configured, you can use the microwave time conversion tool directly from VS Code through the MCP extension interface.
+
+The MCP server will be available as a tool that you can call with cooking time conversion requests, making it easy to get microwave timing adjustments without leaving your development environment.
 
 ### Manual Deployment to GitHub Pages
 
