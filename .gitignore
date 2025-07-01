@@ -8,6 +8,7 @@ yarn-error.log*
 dist/
 build/
 out/
+_site/
 
 # Azure Static Web Apps
 .azure/
