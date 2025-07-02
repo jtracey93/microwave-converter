@@ -1,0 +1,7 @@
+{
+  "mcp.servers": {
+    "microwave-converter": {
+      "command": "d:/GitRepos/GitHub-jtracey93/microwave-converter/run_mcp_server.bat"
+    }
+  }
+}

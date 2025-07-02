@@ -1,0 +1,9 @@
+{
+  "mcp.servers": {
+    "microwave-converter": {
+      "command": "D:/GitRepos/GitHub-jtracey93/microwave-converter/.venv/Scripts/python.exe",
+      "args": ["d:/GitRepos/GitHub-jtracey93/microwave-converter/mcp_server.py"],
+      "cwd": "d:/GitRepos/GitHub-jtracey93/microwave-converter"
+    }
+  }
+}

@@ -8,25 +8,21 @@ Uses the same conversion logic as the static web app.
 
 import asyncio
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
 from mcp.server.stdio import stdio_server
 from mcp.types import (
-    CallToolRequestParams,
-    Resource,
     Tool,
     TextContent,
-    ImageContent,
-    EmbeddedResource,
 )
 
 # Initialize the MCP server
-server = Server("microwave-converter")
+server = Server("microwave-converter", version="1.0.0")
 
 @server.list_tools()
-async def handle_list_tools() -> list[Tool]:
+async def handle_list_tools() -> List[Tool]:
     """List available tools."""
     return [
         Tool(
@@ -66,7 +62,7 @@ async def handle_list_tools() -> list[Tool]:
     ]
 
 @server.call_tool()
-async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> list[TextContent]:
+async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
     """Handle tool calls."""
     if name != "convert_microwave_time":
         raise ValueError(f"Unknown tool: {name}")
@@ -152,17 +148,17 @@ def format_time(minutes: int, seconds: int) -> str:
 
 def get_power_level_recommendation(original_wattage: float, target_wattage: float) -> Dict[str, str]:
     """Get power level recommendations based on wattage difference."""
-    ratio = original_wattage / target_wattage
+    ratio = target_wattage / original_wattage  # Changed: target/original instead of original/target
     
     if ratio > 1.5:
         return {
             "power_level": "70-80%",
-            "reason": "Your microwave is much more powerful. Consider using a lower power level."
+            "reason": "Your microwave is much more powerful than the recipe calls for. Consider using a lower power level."
         }
     elif ratio < 0.7:
         return {
             "power_level": "100%", 
-            "reason": "Your microwave is less powerful. Use full power and check frequently."
+            "reason": "Your microwave is less powerful than the recipe calls for. Use full power and check frequently."
         }
     else:
         return {
@@ -176,13 +172,9 @@ async def main():
         await server.run(
             read_stream,
             write_stream,
-            InitializationOptions(
-                server_name="microwave-converter",
-                server_version="1.0.0",
-                capabilities=server.get_capabilities(
-                    notification_options=NotificationOptions(),
-                    experimental_capabilities=None,
-                ),
+            server.create_initialization_options(
+                notification_options=NotificationOptions(),
+                experimental_capabilities=None,
             ),
         )
 

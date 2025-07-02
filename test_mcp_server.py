@@ -14,11 +14,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 async def test_mcp_tool():
     """Test the MCP tool functionality."""
     try:
-        from mcp_server import server
+        from mcp_server import server, handle_list_tools, handle_call_tool
         
         # Test listing tools
         print("Testing tool listing...")
-        tools = await server.list_tools()()
+        tools = await handle_list_tools()
         print(f"Available tools: {len(tools)}")
         for tool in tools:
             print(f"  - {tool.name}: {tool.description}")
@@ -32,7 +32,7 @@ async def test_mcp_tool():
             "original_seconds": 0
         }
         
-        result = await server.call_tool()("convert_microwave_time", arguments)
+        result = await handle_call_tool("convert_microwave_time", arguments)
         print("Result:")
         for content in result:
             print(content.text)
@@ -46,7 +46,7 @@ async def test_mcp_tool():
                 "original_minutes": 2,
                 "original_seconds": 0
             }
-            await server.call_tool()("convert_microwave_time", invalid_arguments)
+            await handle_call_tool("convert_microwave_time", invalid_arguments)
         except ValueError as e:
             print(f"Expected error caught: {e}")
         
