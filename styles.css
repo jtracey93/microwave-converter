@@ -11,8 +11,8 @@ body {
     color: #333;
     background: #f8f9fa;
     min-height: 100vh;
-    /* Prevent overscroll on iOS */
-    overscroll-behavior: none;
+    /* Prevent vertical overscroll on iOS */
+    overscroll-behavior-y: none;
 }
 
 .container {
@@ -289,7 +289,7 @@ input[type="number"]:focus {
     }
 }
 
-/* iPhone 14 Pro specific optimizations */
+/* Small screen optimizations (iPhone 14 Pro and similar devices) */
 @media (max-width: 430px) {
     body {
         font-size: 14px;

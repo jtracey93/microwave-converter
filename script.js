@@ -94,12 +94,12 @@ class MicrowaveConverter {
 
     adjustValue(inputId, delta) {
         const input = document.getElementById(inputId);
-        let currentValue = parseInt(input.value) || 0;
+        let currentValue = parseInt(input.value, 10) || 0;
         let newValue = currentValue + delta;
         
         // Apply constraints
-        const min = parseInt(input.getAttribute('min')) || 0;
-        const max = parseInt(input.getAttribute('max')) || Infinity;
+        const min = parseInt(input.getAttribute('min'), 10) || 0;
+        const max = parseInt(input.getAttribute('max'), 10) || Infinity;
         
         newValue = Math.max(min, Math.min(max, newValue));
         input.value = newValue;
