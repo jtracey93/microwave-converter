@@ -11,22 +11,29 @@ body {
     color: #333;
     background: #f8f9fa;
     min-height: 100vh;
+    /* Prevent vertical overscroll on iOS */
+    overscroll-behavior-y: none;
 }
 
 .container {
     max-width: 500px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
+    /* Optimize for iPhone 14 Pro viewport */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header */
 .header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 
 .header h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: #2c3e50;
     margin-bottom: 0;
@@ -34,14 +41,15 @@ body {
 
 /* Main content */
 .main-content {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    flex: 1;
 }
 
 /* Converter card */
 .converter-card {
     background: white;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1.25rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #e9ecef;
 }
@@ -49,26 +57,26 @@ body {
 .converter-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.5rem;
 }
 
 .input-group label {
     font-weight: 500;
     color: #495057;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 /* Section divider */
 .section-divider {
     height: 1px;
     background: #e9ecef;
-    margin: 1.5rem 0;
+    margin: 0.75rem 0;
     position: relative;
 }
 
@@ -93,11 +101,11 @@ body {
 .field {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
 }
 
 .field-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #6c757d;
     font-weight: 500;
 }
@@ -105,16 +113,52 @@ body {
 .time-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 0.75rem;
+}
+
+/* Input with controls */
+.input-with-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.control-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.control-btn:hover {
+    background: #0056b3;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
 }
 
 input[type="number"] {
-    padding: 0.8rem;
+    padding: 0.6rem 0.5rem;
     border: 2px solid #e9ecef;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: border-color 0.2s ease;
     background: white;
+    flex: 1;
+    text-align: center;
 }
 
 input[type="number"]:focus {
@@ -122,59 +166,18 @@ input[type="number"]:focus {
     border-color: #007bff;
 }
 
-/* Quick select styles */
-.quick-select {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.4rem;
-}
-
-.time-quick-selects {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #f1f3f4;
-}
-
-.quick-select-label {
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.quick-select-btn {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #495057;
-}
-
-.quick-select-btn:hover {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.quick-select-btn.time-btn {
-    min-width: 3rem;
-}
 
 .calculate-btn {
     background: #007bff;
     color: white;
     border: none;
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
 }
 
 .calculate-btn:hover {
@@ -187,11 +190,11 @@ input[type="number"]:focus {
 
 /* Result section */
 .result-section {
-    margin-top: 2rem;
+    margin-top: 1.25rem;
     text-align: center;
     background: #f8f9fa;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1.25rem;
     border: 2px solid #e9ecef;
 }
 
@@ -200,26 +203,26 @@ input[type="number"]:focus {
 }
 
 .time-display {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #007bff;
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .explanation {
     color: #6c757d;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
 }
 
 .reset-btn {
     background: transparent;
     color: #007bff;
     border: 2px solid #007bff;
-    padding: 0.6rem 1.2rem;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -233,8 +236,9 @@ input[type="number"]:focus {
 .footer {
     text-align: center;
     color: #6c757d;
-    padding: 1rem;
-    font-size: 0.9rem;
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 /* Error states */
@@ -246,7 +250,7 @@ input[type="number"]:focus {
 
 .error-message {
     color: #dc3545;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     margin-top: 0.25rem;
 }
 
@@ -263,7 +267,11 @@ input[type="number"]:focus {
     }
     
     .header h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
+    }
+    
+    .converter-card {
+        padding: 2rem;
     }
     
     .row {
@@ -281,32 +289,92 @@ input[type="number"]:focus {
     }
 }
 
-@media (max-width: 480px) {
+/* Small screen optimizations (iPhone 14 Pro and similar devices) */
+@media (max-width: 430px) {
+    body {
+        font-size: 14px;
+    }
+    
     .container {
-        padding: 15px;
+        padding: 12px;
+        padding-bottom: 8px;
+    }
+    
+    .header {
+        margin-bottom: 0.75rem;
+    }
+    
+    .header h1 {
+        font-size: 1.4rem;
     }
     
     .converter-card {
-        padding: 1.5rem;
+        padding: 1rem;
+    }
+    
+    .converter-form {
+        gap: 0.85rem;
+    }
+    
+    .input-group {
+        gap: 0.4rem;
+    }
+    
+    .section-divider {
+        margin: 0.6rem 0;
+    }
+    
+    .time-row {
+        gap: 0.6rem;
+    }
+    
+    .control-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+    
+    input[type="number"] {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .field-label {
+        font-size: 0.75rem;
+    }
+    
+    .input-group > label {
+        font-size: 0.85rem;
+    }
+    
+    .calculate-btn {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+    
+    .result-section {
+        margin-top: 1rem;
+        padding: 1rem;
     }
     
     .time-display {
-        font-size: 2rem;
+        font-size: 1.75rem;
+        margin-bottom: 0.6rem;
     }
     
-    .quick-select {
-        grid-template-columns: repeat(3, 1fr);
-        display: grid;
+    .explanation {
+        font-size: 0.85rem;
+        margin-bottom: 0.85rem;
     }
     
-    .time-quick-selects .quick-select {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.3rem;
+    .reset-btn {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.8rem;
     }
     
-    .quick-select-btn.time-btn {
-        font-size: 0.7rem;
-        padding: 0.3rem 0.4rem;
+    .footer {
+        padding: 0.5rem;
+        font-size: 0.8rem;
     }
 }
 
