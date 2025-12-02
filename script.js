@@ -19,6 +19,9 @@ class MicrowaveConverter {
         
         // Add number input formatting
         this.addInputFormatting();
+        
+        // Add increment/decrement button handlers
+        this.addControlButtons();
     }
 
     addInputValidation() {
@@ -57,6 +60,52 @@ class MicrowaveConverter {
             if (value > 60) e.target.value = 60;
             if (value < 0) e.target.value = 0;
         });
+    }
+
+    addControlButtons() {
+        // Wattage controls - increment/decrement by 100
+        document.getElementById('originalWattageUp').addEventListener('click', () => {
+            this.adjustValue('originalWattage', 100);
+        });
+        document.getElementById('originalWattageDown').addEventListener('click', () => {
+            this.adjustValue('originalWattage', -100);
+        });
+        document.getElementById('targetWattageUp').addEventListener('click', () => {
+            this.adjustValue('targetWattage', 100);
+        });
+        document.getElementById('targetWattageDown').addEventListener('click', () => {
+            this.adjustValue('targetWattage', -100);
+        });
+
+        // Time controls - minutes by 1, seconds by 10
+        document.getElementById('minutesUp').addEventListener('click', () => {
+            this.adjustValue('originalMinutes', 1);
+        });
+        document.getElementById('minutesDown').addEventListener('click', () => {
+            this.adjustValue('originalMinutes', -1);
+        });
+        document.getElementById('secondsUp').addEventListener('click', () => {
+            this.adjustValue('originalSeconds', 10);
+        });
+        document.getElementById('secondsDown').addEventListener('click', () => {
+            this.adjustValue('originalSeconds', -10);
+        });
+    }
+
+    adjustValue(inputId, delta) {
+        const input = document.getElementById(inputId);
+        let currentValue = parseInt(input.value) || 0;
+        let newValue = currentValue + delta;
+        
+        // Apply constraints
+        const min = parseInt(input.getAttribute('min')) || 0;
+        const max = parseInt(input.getAttribute('max')) || Infinity;
+        
+        newValue = Math.max(min, Math.min(max, newValue));
+        input.value = newValue;
+        
+        // Trigger validation
+        this.clearErrors(input);
     }
 
     validateInput(input) {
@@ -241,8 +290,9 @@ class MicrowaveConverter {
         this.form.reset();
         
         // Set default values
+        document.getElementById('originalWattage').value = 800;
         document.getElementById('targetWattage').value = 700;
-        document.getElementById('originalMinutes').value = 0;
+        document.getElementById('originalMinutes').value = 8;
         document.getElementById('originalSeconds').value = 0;
         
         this.resultSection.classList.add('hidden');
@@ -282,9 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize the converter
     new MicrowaveConverter();
     
-    // Add quick select functionality
-    addQuickSelectButtons();
-    
     // Add service worker for PWA capabilities (optional)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(console.error);
@@ -307,65 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-// Quick select functionality
-function addQuickSelectButtons() {
-    const commonWattages = [600, 700, 800, 900, 1000, 1100, 1200];
-    
-    // Add quick select for original wattage
-    const originalContainer = document.getElementById('originalWattageQuick');
-    commonWattages.forEach(wattage => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'quick-select-btn';
-        btn.textContent = `${wattage}W`;
-        btn.addEventListener('click', () => {
-            document.getElementById('originalWattage').value = wattage;
-        });
-        originalContainer.appendChild(btn);
-    });
-    
-    // Add quick select for target wattage
-    const targetContainer = document.getElementById('targetWattageQuick');
-    commonWattages.forEach(wattage => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'quick-select-btn';
-        btn.textContent = `${wattage}W`;
-        btn.addEventListener('click', () => {
-            document.getElementById('targetWattage').value = wattage;
-        });
-        targetContainer.appendChild(btn);
-    });
-    
-    // Add quick select for common cooking times
-    const timeContainer = document.getElementById('timeQuickSelect');
-    const commonTimes = [
-        { label: '30s', minutes: 0, seconds: 30 },
-        { label: '1m', minutes: 1, seconds: 0 },
-        { label: '1m 30s', minutes: 1, seconds: 30 },
-        { label: '2m', minutes: 2, seconds: 0 },
-        { label: '2m 30s', minutes: 2, seconds: 30 },
-        { label: '3m', minutes: 3, seconds: 0 },
-        { label: '4m', minutes: 4, seconds: 0 },
-        { label: '5m', minutes: 5, seconds: 0 },
-        { label: '7m', minutes: 7, seconds: 0 },
-        { label: '8m', minutes: 8, seconds: 0 },
-        { label: '10m', minutes: 10, seconds: 0 }
-    ];
-    
-    commonTimes.forEach(time => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'quick-select-btn time-btn';
-        btn.textContent = time.label;
-        btn.addEventListener('click', () => {
-            document.getElementById('originalMinutes').value = time.minutes;
-            document.getElementById('originalSeconds').value = time.seconds;
-        });
-        timeContainer.appendChild(btn);
-    });
-}
 
 // Utility functions for potential future enhancements
 const Utils = {
