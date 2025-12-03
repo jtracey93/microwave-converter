@@ -1,5 +1,5 @@
 // Service Worker for Microwave Timer PWA
-const CACHE_NAME = 'microwave-timer-v1';
+const CACHE_NAME = 'microwave-timer-v2';
 const urlsToCache = [
     './',
     './index.html',
@@ -15,16 +15,30 @@ self.addEventListener('install', (event) => {
             .then((cache) => {
                 return cache.addAll(urlsToCache);
             })
+            .then(() => {
+                // Force the waiting service worker to become the active service worker
+                return self.skipWaiting();
+            })
     );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - network first, fall back to cache
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request)
+        fetch(event.request)
             .then((response) => {
-                // Return cached version or fetch from network
-                return response || fetch(event.request);
+                // Cache the fetched response for offline use
+                if (response && response.status === 200) {
+                    const responseClone = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseClone);
+                    });
+                }
+                return response;
+            })
+            .catch(() => {
+                // Network failed, try cache
+                return caches.match(event.request);
             })
     );
 });
@@ -40,6 +54,9 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
+        }).then(() => {
+            // Claim all clients immediately
+            return self.clients.claim();
         })
     );
 });
