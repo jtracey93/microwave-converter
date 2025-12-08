@@ -10,6 +10,10 @@ build/
 out/
 _site/
 
+# Azure Functions
+azure-function/local.settings.json
+azure-function/node_modules/
+
 # Azure Static Web Apps
 .azure/
 swa-db.json

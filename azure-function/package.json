@@ -1,0 +1,19 @@
+{
+  "name": "microwave-scanner-function",
+  "version": "1.0.0",
+  "description": "Azure Function for scanning cooking instructions from images",
+  "main": "src/functions/scanCookingInstructions.js",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "@azure/ai-vision-image-analysis": "^1.0.0-beta.2",
+    "@azure/core-auth": "^1.7.0",
+    "@azure/identity": "^4.0.0"
+  },
+  "devDependencies": {
+    "@azure/functions-core-tools": "^4.0.5455"
+  }
+}
