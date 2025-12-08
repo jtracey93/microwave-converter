@@ -7,6 +7,15 @@ class MicrowaveConverter {
         this.resultExplanation = document.getElementById('resultExplanation');
         this.resetBtn = document.getElementById('resetBtn');
         
+        // Photo scanner elements
+        this.capturePhotoBtn = document.getElementById('capturePhotoBtn');
+        this.uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+        this.photoInput = document.getElementById('photoInput');
+        this.uploadInput = document.getElementById('uploadInput');
+        this.scanStatus = document.getElementById('scanStatus');
+        this.scanResult = document.getElementById('scanResult');
+        this.scanResultText = document.getElementById('scanResultText');
+        
         this.init();
     }
 
@@ -22,6 +31,45 @@ class MicrowaveConverter {
         
         // Add increment/decrement button handlers
         this.addControlButtons();
+        
+        // Add photo scanner handlers
+        this.addPhotoScannerHandlers();
+    }
+
+    addPhotoScannerHandlers() {
+        // Check if scanning is enabled
+        if (!CONFIG.SCANNING_ENABLED || !CONFIG.AZURE_FUNCTION_URL) {
+            // Disable scanner buttons if not configured
+            this.capturePhotoBtn.disabled = true;
+            this.uploadPhotoBtn.disabled = true;
+            this.capturePhotoBtn.title = 'Photo scanning not configured. See AZURE_AI_SETUP.md';
+            this.uploadPhotoBtn.title = 'Photo scanning not configured. See AZURE_AI_SETUP.md';
+            this.capturePhotoBtn.style.opacity = '0.5';
+            this.uploadPhotoBtn.style.opacity = '0.5';
+            this.capturePhotoBtn.style.cursor = 'not-allowed';
+            this.uploadPhotoBtn.style.cursor = 'not-allowed';
+            return;
+        }
+
+        // Take photo button
+        this.capturePhotoBtn.addEventListener('click', () => {
+            this.photoInput.click();
+        });
+
+        // Upload photo button
+        this.uploadPhotoBtn.addEventListener('click', () => {
+            this.uploadInput.click();
+        });
+
+        // Handle photo capture
+        this.photoInput.addEventListener('change', (e) => {
+            this.handlePhotoSelected(e.target.files[0]);
+        });
+
+        // Handle photo upload
+        this.uploadInput.addEventListener('change', (e) => {
+            this.handlePhotoSelected(e.target.files[0]);
+        });
     }
 
     addInputValidation() {
@@ -324,6 +372,206 @@ class MicrowaveConverter {
             newTime: result.newTotalSeconds,
             ratio: result.ratio
         });
+    }
+
+    // Photo Scanner Methods
+    async handlePhotoSelected(file) {
+        if (!file) return;
+
+        // Validate file type
+        if (!CONFIG.SUPPORTED_FORMATS.includes(file.type)) {
+            this.showScanError('Please select a valid image file (JPEG or PNG)');
+            return;
+        }
+
+        // Validate file size
+        if (file.size > CONFIG.MAX_IMAGE_SIZE) {
+            this.showScanError('Image is too large. Please choose an image smaller than 4MB.');
+            return;
+        }
+
+        try {
+            // Show loading state
+            this.showScanStatus('Scanning image...');
+
+            // Compress and convert image to base64
+            const base64Image = await this.processImage(file);
+
+            // Send to Azure Function for analysis
+            const result = await this.scanCookingInstructions(base64Image);
+
+            // Process and display results
+            this.handleScanResult(result);
+
+        } catch (error) {
+            console.error('Error scanning image:', error);
+            this.showScanError(error.message || 'Failed to scan image. Please try again.');
+        } finally {
+            // Reset file inputs
+            this.photoInput.value = '';
+            this.uploadInput.value = '';
+        }
+    }
+
+    async processImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const img = new Image();
+                
+                img.onload = () => {
+                    // Create canvas for image processing
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Calculate new dimensions (if needed)
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > CONFIG.MAX_IMAGE_WIDTH || height > CONFIG.MAX_IMAGE_HEIGHT) {
+                        const ratio = Math.min(
+                            CONFIG.MAX_IMAGE_WIDTH / width,
+                            CONFIG.MAX_IMAGE_HEIGHT / height
+                        );
+                        width = width * ratio;
+                        height = height * ratio;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Draw and compress image
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Convert to base64
+                    const base64 = canvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
+                    resolve(base64);
+                };
+                
+                img.onerror = () => {
+                    reject(new Error('Failed to load image'));
+                };
+                
+                img.src = e.target.result;
+            };
+            
+            reader.onerror = () => {
+                reject(new Error('Failed to read image file'));
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async scanCookingInstructions(base64Image) {
+        const response = await fetch(CONFIG.AZURE_FUNCTION_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                image: base64Image
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'Failed to scan image');
+        }
+
+        return await response.json();
+    }
+
+    handleScanResult(result) {
+        if (!result.success) {
+            this.showScanError('Could not extract cooking instructions from the image.');
+            return;
+        }
+
+        const { wattage, minutes, seconds, confidence, extractedText } = result;
+
+        // Check if we got any useful data
+        if (!wattage && !minutes && !seconds) {
+            this.showScanError('No cooking instructions found in the image. Please try a clearer photo.');
+            return;
+        }
+
+        // Auto-fill form fields
+        if (wattage && wattage >= 100 && wattage <= 2000) {
+            document.getElementById('originalWattage').value = wattage;
+        }
+        
+        if (minutes !== null && minutes >= 0) {
+            document.getElementById('originalMinutes').value = minutes;
+        }
+        
+        if (seconds !== null && seconds >= 0 && seconds <= 59) {
+            document.getElementById('originalSeconds').value = seconds;
+        }
+
+        // Show success message
+        let resultMessage = 'Successfully scanned! ';
+        const foundItems = [];
+        
+        if (wattage) foundItems.push(`${wattage}W`);
+        if (minutes > 0 || seconds > 0) {
+            foundItems.push(this.formatTime(minutes || 0, seconds || 0));
+        }
+        
+        if (foundItems.length > 0) {
+            resultMessage += `Found: ${foundItems.join(', ')}`;
+        } else {
+            resultMessage += 'Partial information detected. Please verify the values.';
+        }
+
+        if (confidence === 'low' || confidence === 'medium') {
+            resultMessage += ' Please verify the values are correct.';
+        }
+
+        this.showScanSuccess(resultMessage, extractedText);
+
+        // Clear any result from previous calculations
+        this.resultSection.classList.add('hidden');
+    }
+
+    showScanStatus(message) {
+        this.scanResult.classList.add('hidden');
+        this.scanStatus.classList.remove('hidden');
+        this.scanStatus.querySelector('.scan-text').textContent = message;
+    }
+
+    showScanSuccess(message, extractedText) {
+        this.scanStatus.classList.add('hidden');
+        this.scanResult.classList.remove('hidden');
+        
+        let detailsHtml = `<strong>${message}</strong>`;
+        if (extractedText) {
+            detailsHtml += `<br><small style="color: #666;">Detected text: "${extractedText.substring(0, 100)}${extractedText.length > 100 ? '...' : ''}"</small>`;
+        }
+        
+        this.scanResultText.innerHTML = detailsHtml;
+
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+            this.scanResult.classList.add('hidden');
+        }, 5000);
+    }
+
+    showScanError(message) {
+        this.scanStatus.classList.add('hidden');
+        this.scanResult.classList.remove('hidden');
+        this.scanResult.style.background = 'linear-gradient(135deg, #ffe0e0 0%, #ffd4d4 100%)';
+        this.scanResult.style.borderColor = '#dc3545';
+        
+        this.scanResultText.innerHTML = `<strong style="color: #721c24;">⚠️ ${message}</strong>`;
+        
+        // Reset styles after 5 seconds
+        setTimeout(() => {
+            this.scanResult.classList.add('hidden');
+            this.scanResult.style.background = '';
+            this.scanResult.style.borderColor = '';
+        }, 5000);
     }
 }
 

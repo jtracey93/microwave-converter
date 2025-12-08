@@ -8,6 +8,7 @@ Visit the app: **[https://jtracey93.github.io/microwave-converter](https://jtrac
 
 ## ✨ Features
 
+- **📷 AI-Powered Photo Scanning** (Optional): Take a photo or upload an image of cooking instructions, and AI will automatically extract the wattage and cooking time
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
 - **PWA Support**: Install as an app on your device for offline use
 - **Quick Selects**: Common wattages and cooking times for faster input
@@ -37,6 +38,40 @@ Get the adjusted cooking time instantly!
 - **PWA** - Service Worker for offline functionality
 - **GitHub Pages** - Static hosting
 - **Python MCP Server** - Model Context Protocol server for IDE integration
+- **Azure AI Vision** (Optional) - OCR for extracting text from cooking instruction images
+- **Azure Functions** (Optional) - Secure serverless API for AI integration
+
+## 📷 AI Photo Scanning (Optional Feature)
+
+The app includes an optional AI-powered photo scanning feature that can extract cooking instructions from images. This feature requires Azure AI infrastructure to be set up.
+
+### How It Works
+
+1. **Take a Photo**: Use your device camera to photograph cooking instructions
+2. **Upload an Image**: Or upload an existing image from your device
+3. **AI Analysis**: Azure AI Vision extracts text using OCR
+4. **Auto-Fill**: The app automatically fills in wattage and cooking time
+
+### Setup Instructions
+
+To enable this feature:
+
+1. Follow the complete setup guide in [AZURE_AI_SETUP.md](AZURE_AI_SETUP.md)
+2. Deploy the Azure Function from the `azure-function/` directory
+3. Update `config.js` with your Azure Function URL
+4. Set `SCANNING_ENABLED: true` in `config.js`
+
+**Note**: This feature is completely optional. The app works perfectly fine without it for manual entry of cooking times.
+
+### Security
+
+The AI scanning feature is secured through:
+- Function-level API key authentication
+- CORS policies restricting access to your domain only
+- Azure Key Vault for credential management
+- Managed Identity for Azure resource access
+
+See [AZURE_AI_SETUP.md](AZURE_AI_SETUP.md) for detailed security configuration.
 
 ## 🚀 Deployment
 

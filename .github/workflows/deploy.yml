@@ -38,6 +38,7 @@ jobs:
           cp index.html _site/
           cp script.js _site/
           cp styles.css _site/
+          cp config.js _site/
           cp manifest.json _site/
           cp sw.js _site/
           cp LICENSE _site/ 2>/dev/null || true

@@ -16,6 +16,47 @@
 
         <main class="main-content">
             <div class="converter-card">
+                <!-- Photo Scanner Section -->
+                <div class="scanner-section">
+                    <div class="scanner-header">
+                        <span class="scanner-icon">📷</span>
+                        <span class="scanner-text">Scan Cooking Instructions</span>
+                    </div>
+                    <div class="scanner-buttons">
+                        <button type="button" id="capturePhotoBtn" class="scanner-btn">
+                            <span class="btn-icon">📸</span>
+                            <span class="btn-text">Take Photo</span>
+                        </button>
+                        <button type="button" id="uploadPhotoBtn" class="scanner-btn">
+                            <span class="btn-icon">🖼️</span>
+                            <span class="btn-text">Upload Image</span>
+                        </button>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
+                    <input type="file" id="uploadInput" accept="image/*" style="display: none;">
+                    
+                    <!-- Scanning status -->
+                    <div id="scanStatus" class="scan-status hidden">
+                        <div class="scan-loader"></div>
+                        <p class="scan-text">Scanning image...</p>
+                    </div>
+                    
+                    <!-- Scan result preview -->
+                    <div id="scanResult" class="scan-result hidden">
+                        <div class="scan-result-header">
+                            <span class="result-icon">✓</span>
+                            <span class="result-text">Instructions detected!</span>
+                        </div>
+                        <div class="scan-result-content">
+                            <p id="scanResultText" class="result-details"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider-with-text">
+                    <span class="divider-text">or enter manually</span>
+                </div>
+
                 <form id="converterForm" class="converter-form">
                     <div class="input-group">
                         <label>Recipe Instructions</label>
@@ -83,6 +124,7 @@
         </footer>
     </div>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
