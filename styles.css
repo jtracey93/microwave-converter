@@ -247,6 +247,21 @@ body {
     line-height: 1.5;
 }
 
+.extracted-text-preview {
+    color: #666;
+}
+
+/* Scan Result Error State */
+.scan-result.scan-result-error {
+    background: linear-gradient(135deg, #ffe0e0 0%, #ffd4d4 100%);
+    border-color: #dc3545;
+}
+
+.error-message-text {
+    color: #721c24;
+}
+
+
 .scan-result-content {
     padding-top: 0.25rem;
 }

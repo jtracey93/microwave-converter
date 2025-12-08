@@ -2,6 +2,11 @@ const { app } = require('@azure/functions');
 const { ImageAnalysisClient } = require('@azure/ai-vision-image-analysis');
 const { AzureKeyCredential } = require('@azure/core-auth');
 
+// Constants
+const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024; // 4MB
+const MIN_WATTAGE = 100;
+const MAX_WATTAGE = 2000;
+
 /**
  * Azure Function to scan cooking instructions from images
  * Uses Azure AI Vision to extract text and parse cooking information
@@ -38,9 +43,8 @@ app.http('ScanCookingInstructions', {
             // Convert base64 to buffer
             const imageBuffer = Buffer.from(imageData, 'base64');
 
-            // Validate image size (max 4MB)
-            const maxSizeBytes = 4 * 1024 * 1024;
-            if (imageBuffer.length > maxSizeBytes) {
+            // Validate image size
+            if (imageBuffer.length > MAX_IMAGE_SIZE_BYTES) {
                 return {
                     status: 400,
                     jsonBody: {
@@ -153,7 +157,7 @@ function parseCookingInstructions(text) {
         const match = normalizedText.match(pattern);
         if (match) {
             const wattage = parseInt(match[1]);
-            if (wattage >= 100 && wattage <= 2000) {
+            if (wattage >= MIN_WATTAGE && wattage <= MAX_WATTAGE) {
                 result.wattage = wattage;
                 break;
             }
